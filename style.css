@@ -1,0 +1,255 @@
+/* ===== 1. Design tokens (colors measured from the photo) ===== */
+:root {
+	--shell: #1c1c1e; /* black plastic body */
+	--shell-edge: #2c2c2f;
+	--gold-1: #c9b67a; /* label gradient */
+	--gold-2: #a8955c;
+	--ink: #2a2414; /* dark print on the label */
+	--window: #141414; /* smoked window strip */
+	--reel: #f2f2f2; /* white hubs */
+	--tape: #5a3a22; /* brown magnetic tape */
+	--scale: 1; /* change to resize the whole cassette */
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	display: grid;
+	place-items: center;
+	background: repeating-conic-gradient(#d9d2c4 0 25%, #4a3a2c 0 50%) 0 0 / 120px
+		120px; /* checkered floor */
+	font-family: system-ui, sans-serif;
+}
+
+/* ===== 2. Shell: rounded black body with grid texture ===== */
+.cassette {
+	position: relative;
+	width: calc(440px * var(--scale));
+	aspect-ratio: 10 / 6.3; /* real cassette ratio ≈ 100 × 63 mm */
+	max-width: calc(100vw - 32px);
+	border-radius: 14px;
+	background:
+		radial-gradient(circle at 1px 1px, #ffffff10 1px, transparent 1.5px) 0 0 /
+			6px 6px,
+		linear-gradient(180deg, var(--shell-edge), var(--shell));
+	box-shadow:
+		inset 0 0 0 2px #00000080,
+		inset 0 2px 0 #ffffff14,
+		0 18px 30px #0008;
+}
+
+/* Corner screws */
+.screw {
+	position: absolute;
+	width: 3%;
+	aspect-ratio: 1;
+	border-radius: 50%;
+	background: radial-gradient(circle, #555 30%, #111 70%);
+}
+.screw.tl {
+	top: 3%;
+	left: 2.5%;
+}
+.screw.tr {
+	top: 3%;
+	right: 2.5%;
+}
+.screw.bl {
+	bottom: 4%;
+	left: 2.5%;
+}
+.screw.br {
+	bottom: 4%;
+	right: 2.5%;
+}
+
+/* ===== 3. Gold label ===== */
+.label {
+	position: absolute;
+	inset: 6% 6% 30% 6%;
+	border-radius: 8px;
+	background: linear-gradient(160deg, var(--gold-1), var(--gold-2));
+	box-shadow:
+		inset 0 0 0 1px #0003,
+		inset 0 -6px 12px #0002;
+	color: var(--ink);
+	direction: rtl; /* Arabic label reads right-to-left */
+}
+
+.label .title {
+	position: absolute;
+	top: 2%;
+	right: 5%;
+	font-family: "Changa", "Noto Naskh Arabic", serif;
+	font-weight: 700;
+	font-size: clamp(16px, 4.6vw, 24px);
+	line-height: 1.4;
+}
+.label .company {
+	position: absolute;
+	top: 23%;
+	left: 0;
+	right: 0; /* full width + text-align → truly centered */
+	text-align: center;
+	font-family: "Changa", "Noto Naskh Arabic", serif;
+	font-weight: 500;
+	font-size: clamp(9px, 2.5vw, 13px);
+	letter-spacing: 0.3px;
+	white-space: nowrap;
+}
+.label .duration {
+	position: absolute;
+	top: 3%;
+	left: 6%;
+	display: flex;
+	align-items: baseline;
+	gap: 6px;
+	font-family: "Changa", "Noto Naskh Arabic";
+	font-weight: 200;
+	font-size: clamp(11px, 3vw, 15px);
+}
+.label .duration b {
+	font-size: 2.2em;
+	font-family: "Changa", "Noto Naskh Arabic", monospace;
+	letter-spacing: -2px;
+}
+.label .side {
+	position: absolute;
+	right: 6%;
+	top: 46%;
+	font-size: clamp(20px, 6vw, 32px);
+	font-family: "Changa", "Noto Naskh Arabic", monospace;
+	font-weight: 500;
+}
+/* The thin writing line under the window */
+.label::after {
+	content: "";
+	position: absolute;
+	left: 5%;
+	right: 5%;
+	bottom: 10%;
+	height: 1px;
+	background: var(--ink);
+	opacity: 0.6;
+}
+
+/* ===== 4. Window strip with reels ===== */
+.window {
+	position: absolute;
+	left: 18%;
+	right: 18%;
+	top: 36%;
+	height: 32%;
+	border-radius: 10px;
+	background: var(--window);
+	box-shadow:
+		inset 0 0 0 2px #000,
+		inset 0 4px 8px #000a;
+	direction: ltr;
+}
+
+.reel {
+	position: absolute;
+	top: 50%;
+	width: 24%;
+	aspect-ratio: 1;
+	transform: translateY(-50%);
+	border-radius: 50%;
+	/* White hub with 6 teeth, drawn with conic-gradient */
+	background:
+		radial-gradient(circle, var(--window) 0 22%, transparent 23%),
+		repeating-conic-gradient(var(--reel) 0 40deg, #bbb 40deg 60deg);
+	box-shadow:
+		0 0 0 3px #888,
+		0 0 0 5px #222;
+	animation: spin 3s linear infinite;
+}
+.reel.left {
+	left: 5%;
+}
+.reel.right {
+	right: 5%;
+}
+
+/* Center viewport showing the tape */
+.viewport {
+	position: absolute;
+	left: 35%;
+	right: 35%;
+	top: 22%;
+	bottom: 22%;
+	border: 2px solid #3a3a3a;
+	background: linear-gradient(
+		90deg,
+		var(--tape) 0 55%,
+		#2a2a2a 55%
+	); /* more tape on one side */
+}
+
+@keyframes spin {
+	to {
+		transform: translateY(-50%) rotate(360deg);
+	}
+}
+
+/* ===== 5. Bottom trapezoid with tape-guide holes ===== */
+.bottom {
+	position: absolute;
+	left: 14%;
+	right: 14%;
+	bottom: 0;
+	height: 22%;
+	background:
+		radial-gradient(circle at 1px 1px, #ffffff10 1px, transparent 1.5px) 0 0 /
+			6px 6px,
+		#18181a;
+	clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%);
+	box-shadow: inset 0 2px 0 #ffffff10;
+}
+.hole {
+	position: absolute;
+	bottom: 30%;
+	width: 5%;
+	aspect-ratio: 1;
+	border-radius: 50%;
+	background: #000;
+	box-shadow: inset 0 1px 2px #fff2;
+}
+.hole.sq {
+	border-radius: 2px;
+	width: 4%;
+}
+.hole:nth-child(1) {
+	left: 12%;
+}
+.hole:nth-child(2) {
+	left: 30%;
+}
+.hole:nth-child(3) {
+	right: 30%;
+}
+.hole:nth-child(4) {
+	right: 12%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reel {
+		animation: none;
+	}
+}
+
+/* ===== 6. Play / pause state (toggled by script.js) ===== */
+.cassette {
+	cursor: pointer;
+}
+.cassette.paused .reel {
+	animation-play-state: paused;
+}
+.cassette:focus-visible {
+	outline: 3px solid var(--gold-1);
+	outline-offset: 6px;
+}
