@@ -1,4 +1,5 @@
 # CSS Cassette — قاريونس
+<img width="480" height="360" alt="image" src="https://github.com/user-attachments/assets/c78044f7-e5ed-4879-bcc5-6aa2056e78ca" />
 
 A retro audio cassette (Garyounis, 60 min, side 2) drawn with **pure HTML + CSS** (no images), with a little JavaScript to play/pause the reels.
 
